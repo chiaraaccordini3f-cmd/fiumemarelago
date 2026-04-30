@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIUME, LAGO E MARE — L'APP DI GAIA</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+
+  :root {
+    --blu: #1565C0;
+    --blu-light: #E3F2FD;
+    --blu-mid: #BBDEFB;
+    --verde: #2E7D32;
+    --verde-light: #E8F5E9;
+    --verde-mid: #C8E6C9;
+    --arancio: #E65100;
+    --arancio-light: #FFF3E0;
+    --arancio-mid: #FFE0B2;
+    --giallo: #F57F17;
+    --viola: #6A1B9A;
+    --rosa: #FCE4EC;
+    --bg: #F0F4FF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', Arial, sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 12px;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--blu);
+    border-radius: 20px;
+    padding: 18px 16px 14px;
+    text-align: center;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .header-wave {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 10px; background: rgba(255,255,255,0.15);
+    border-radius: 0 0 20px 20px;
+  }
+  .header-title {
+    font-size: 22px; font-weight: 900; color: #fff;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .header-sub {
+    font-size: 13px; color: #BBDEFB;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .stars-pill {
+    display: inline-block;
+    background: #FFF176; border-radius: 20px;
+    padding: 5px 18px; font-size: 17px; font-weight: 900;
+    color: #F57F17;
+  }
+
+  /* ===== NAV ===== */
+  .nav {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 6px; margin-bottom: 14px;
+  }
+  .nav-btn {
+    padding: 10px 4px; border-radius: 14px;
+    border: 3px solid transparent;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 11px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    cursor: pointer; text-align: center;
+    line-height: 1.4; transition: all 0.15s;
+  }
+  .nav-btn.s1 { background: var(--blu-light); color: var(--blu); border-color: var(--blu); }
+  .nav-btn.s2 { background: var(--verde-light); color: var(--verde); border-color: var(--verde); }
+  .nav-btn.s3 { background: var(--arancio-light); color: var(--arancio); border-color: var(--arancio); }
+  .nav-btn.s4 { background: var(--rosa); color: var(--viola); border-color: var(--viola); }
+  .nav-btn.s1.active { background: var(--blu); color: #fff; }
+  .nav-btn.s2.active { background: var(--verde); color: #fff; }
+  .nav-btn.s3.active { background: var(--arancio); color: #fff; }
+  .nav-btn.s4.active { background: var(--viola); color: #fff; }
+
+  /* ===== SCREENS ===== */
+  .scr { display: none; }
+  .scr.active { display: block; }
+
+  /* ===== SCHEDE ===== */
+  .big-card {
+    border-radius: 20px; padding: 20px 16px;
+    margin-bottom: 14px; border: 4px solid;
+  }
+  .big-emoji { font-size: 60px; text-align: center; margin-bottom: 8px; line-height: 1; }
+  .big-title {
+    font-size: 28px; font-weight: 900;
+    text-align: center; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .audio-btn-main {
+    display: block; width: 100%; margin: 0 auto 14px;
+    padding: 10px 16px;
+    border-radius: 12px; border: 3px solid;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 15px; font-weight: 900;
+    text-transform: uppercase; cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: opacity 0.15s;
+  }
+  .audio-btn-main:active { opacity: 0.8; }
+
+  .info-row {
+    display: flex; align-items: flex-start;
+    gap: 10px; border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 8px;
+    cursor: pointer; transition: filter 0.1s;
+  }
+  .info-row:active { filter: brightness(0.95); }
+  .info-icon { font-size: 24px; min-width: 32px; text-align: center; }
+  .info-label {
+    font-size: 12px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 2px; opacity: 0.75;
+  }
+  .info-val {
+    font-size: 17px; font-weight: 900; text-transform: uppercase;
+  }
+  .speak-hint {
+    font-size: 11px; opacity: 0.55; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-top: 2px;
+  }
+
+  .card-nav {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-top: 4px;
+  }
+  .card-btn {
+    padding: 11px 20px; border-radius: 12px;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 16px; font-weight: 900;
+    border: 3px solid; cursor: pointer;
+    text-transform: uppercase;
+    transition: opacity 0.15s;
+  }
+  .card-btn:active { opacity: 0.8; }
+  .dots { display: flex; gap: 7px; }
+  .dot {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: #ccc; transition: background 0.2s;
+  }
+  .dot.on { background: var(--blu); }
+
+  /* ===== CONFRONTO ===== */
+  .cmp-section { margin-bottom: 10px; }
+  .cmp-head-row {
+    display: flex; gap: 6px; margin-bottom: 6px;
+  }
+  .cmp-spacer { flex: 0 0 88px; }
+  .cmp-th {
+    flex: 1; border-radius: 12px;
+    padding: 10px 6px; text-align: center;
+    font-size: 14px; font-weight: 900;
+    text-transform: uppercase; line-height: 1.3;
+  }
+  .cmp-f { background: var(--blu-mid); color: #0C447C; }
+  .cmp-l { background: var(--verde-mid); color: #1B5E20; }
+  .cmp-m { background: var(--arancio-mid); color: #BF360C; }
+  .cmp-row {
+    display: flex; gap: 6px; margin-bottom: 7px;
+    cursor: pointer;
+  }
+  .cmp-label {
+    flex: 0 0 88px; font-size: 12px; font-weight: 900;
+    text-transform: uppercase; border-radius: 10px;
+    padding: 10px 8px; display: flex; align-items: center;
+    background: #E8EAF6; color: #283593; line-height: 1.3;
+  }
+  .cmp-cell {
+    flex: 1; border-radius: 10px; padding: 10px 6px;
+    text-align: center; font-size: 13px; font-weight: 900;
+    text-transform: uppercase; display: flex;
+    align-items: center; justify-content: center;
+    line-height: 1.3;
+  }
+  .cmp-row-f .cmp-cell { background: #E3F2FD; color: #0C447C; }
+  .cmp-row-l .cmp-cell { background: var(--verde-light); color: #1B5E20; }
+  .cmp-row-m .cmp-cell { background: var(--arancio-light); color: #BF360C; }
+  .audio-row-btn {
+    display: block; width: 100%; margin-bottom: 10px;
+    padding: 10px; border-radius: 12px;
+    border: 2px solid #283593;
+    background: #E8EAF6; color: #283593;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 14px; font-weight: 900;
+    text-transform: uppercase; cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== QUIZ ===== */
+  .qz-prog { display: flex; gap: 4px; margin-bottom: 12px; }
+  .qz-dot {
+    height: 7px; flex: 1; border-radius: 4px;
+    background: #E0E0E0; transition: background 0.2s;
+  }
+  .qz-dot.done { background: var(--verde); }
+  .qz-dot.cur { background: var(--giallo); }
+
+  .qz-card {
+    border-radius: 20px; padding: 22px 16px;
+    margin-bottom: 12px;
+    border: 4px solid var(--giallo);
+    background: #FFF8E1;
+  }
+  .qz-icon { font-size: 44px; text-align: center; margin-bottom: 8px; }
+  .qz-q {
+    font-size: 19px; font-weight: 900;
+    text-transform: uppercase; text-align: center;
+    margin-bottom: 16px; color: #412402; line-height: 1.35;
+  }
+  .qz-audio-btn {
+    display: block; width: 100%; margin-bottom: 14px;
+    padding: 9px; border-radius: 10px;
+    border: 2px solid var(--giallo);
+    background: #fff; color: #412402;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 13px; font-weight: 900;
+    text-transform: uppercase; cursor: pointer;
+  }
+  .opt {
+    width: 100%; padding: 15px 14px;
+    border-radius: 14px; border: 3px solid var(--giallo);
+    background: #fff; font-family: 'Nunito', Arial, sans-serif;
+    font-size: 17px; font-weight: 900;
+    text-transform: uppercase; cursor: pointer;
+    margin-bottom: 10px; text-align: left; color: #412402;
+    transition: background 0.15s;
+  }
+  .opt:hover { background: #FFFDE7; }
+  .opt.ok { background: var(--verde-mid); border-color: var(--verde); color: #1B5E20; }
+  .opt.no { background: #FFCCBC; border-color: #BF360C; color: #3E2723; }
+  .opt.off { pointer-events: none; }
+
+  .fb {
+    border-radius: 14px; padding: 13px 16px;
+    font-size: 17px; font-weight: 900;
+    text-transform: uppercase; text-align: center;
+    margin-bottom: 10px; display: none;
+    line-height: 1.3;
+  }
+  .fb.show { display: block; }
+  .fb.ok { background: var(--verde-mid); color: #1B5E20; }
+  .fb.no { background: #FFCCBC; color: #BF360C; }
+
+  .qz-next {
+    width: 100%; padding: 15px;
+    border-radius: 14px; border: none;
+    background: var(--blu); color: #fff;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 18px; font-weight: 900;
+    text-transform: uppercase; cursor: pointer;
+    display: none; letter-spacing: 0.5px;
+  }
+  .qz-next.show { display: block; }
+
+  .res-box {
+    border-radius: 20px; padding: 26px 18px;
+    text-align: center; background: var(--verde-light);
+    border: 4px solid var(--verde);
+  }
+  .res-emo { font-size: 60px; margin-bottom: 10px; }
+  .res-t { font-size: 23px; font-weight: 900; text-transform: uppercase; color: #1B5E20; margin-bottom: 6px; }
+  .res-sc { font-size: 44px; font-weight: 900; color: var(--blu); margin-bottom: 6px; }
+  .res-s { font-size: 15px; font-weight: 900; text-transform: uppercase; color: var(--verde); margin-bottom: 20px; line-height: 1.4; }
+  .restart-btn {
+    padding: 13px 32px; border-radius: 14px;
+    border: 3px solid var(--verde); background: #fff;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 17px; font-weight: 900;
+    text-transform: uppercase; cursor: pointer; color: var(--verde);
+  }
+
+  /* ===== ABBINA ===== */
+  .ab-istr {
+    background: #EDE7F6; border-radius: 14px;
+    padding: 12px 16px; font-size: 15px; font-weight: 900;
+    text-transform: uppercase; color: #4A148C;
+    margin-bottom: 12px; line-height: 1.5; text-align: center;
+  }
+  .rnd-lbl {
+    font-size: 13px; font-weight: 900;
+    text-transform: uppercase; text-align: center;
+    margin-bottom: 10px; color: #555;
+    letter-spacing: 0.5px;
+  }
+  .ab-area { display: flex; gap: 8px; margin-bottom: 12px; }
+  .ab-col { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .ab-head {
+    font-size: 11px; font-weight: 900;
+    text-transform: uppercase; text-align: center;
+    padding-bottom: 6px; border-bottom: 2px solid #BDBDBD;
+    margin-bottom: 2px; color: #888; letter-spacing: 0.5px;
+  }
+  .tile {
+    border-radius: 14px; border: 3px solid #BDBDBD;
+    background: #fff; padding: 13px 8px;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 15px; font-weight: 900;
+    text-transform: uppercase; text-align: center;
+    cursor: pointer; line-height: 1.3;
+    color: #333; min-height: 58px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .tile.sel { border-color: var(--viola); background: #EDE7F6; color: #4A148C; }
+  .tile.ok { border-color: var(--verde); background: var(--verde-mid); color: #1B5E20; pointer-events: none; }
+  .tile.no { border-color: #BF360C; background: #FFCCBC; color: #3E2723; }
+  .tile.off { opacity: 0.35; pointer-events: none; }
+
+  .ab-fb {
+    border-radius: 14px; padding: 12px 16px;
+    font-size: 16px; font-weight: 900;
+    text-transform: uppercase; text-align: center;
+    margin-bottom: 10px; display: none;
+  }
+  .ab-fb.show { display: block; }
+  .ab-fb.ok { background: var(--verde-mid); color: #1B5E20; }
+  .ab-fb.no { background: #FFCCBC; color: #BF360C; }
+
+  .ab-btns { display: flex; gap: 8px; }
+  .ab-btn {
+    flex: 1; padding: 13px;
+    border-radius: 14px; border: 3px solid #BDBDBD;
+    background: #f5f5f5;
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 15px; font-weight: 900;
+    text-transform: uppercase; cursor: pointer; color: #555;
+  }
+  .ab-btn.pri { background: var(--blu); color: #fff; border-color: var(--blu); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">🌊 FIUME, LAGO E MARE 🏔️</div>
+  <div class="header-sub">L'APP DI GAIA</div>
+  <div class="stars-pill" id="starPill">⭐ 0 STELLE</div>
+  <div class="header-wave"></div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn s1 active" onclick="goTo('schede',this)">📖<br>SCHEDE</button>
+  <button class="nav-btn s2" onclick="goTo('confronto',this)">🔍<br>CONFRONTO</button>
+  <button class="nav-btn s3" onclick="goTo('quiz',this)">✏️<br>QUIZ</button>
+  <button class="nav-btn s4" onclick="goTo('abbina',this)">🎯<br>ABBINA</button>
+</div>
+
+<!-- ===== SCHEDE ===== -->
+<div class="scr active" id="scr-schede">
+  <div class="big-card" id="sc-card">
+    <div class="big-emoji" id="sc-emo"></div>
+    <div class="big-title" id="sc-title"></div>
+    <button class="audio-btn-main" id="sc-audio-btn" onclick="speakCard()">🔊 ASCOLTA TUTTA LA SCHEDA</button>
+    <div id="sc-rows"></div>
+  </div>
+  <div class="card-nav">
+    <button class="card-btn" id="sc-prev" onclick="prevC()">◀ PRIMA</button>
+    <div class="dots" id="sc-dots"></div>
+    <button class="card-btn" id="sc-next" onclick="nextC()">DOPO ▶</button>
+  </div>
+</div>
+
+<!-- ===== CONFRONTO ===== -->
+<div class="scr" id="scr-confronto">
+  <button class="audio-row-btn" onclick="speakText('Confrontiamo fiume, lago e mare. L\'acqua del fiume scorre sempre. L\'acqua del lago sta ferma. Il mare fa le onde. Il fiume e il lago hanno acqua dolce. Il mare ha acqua salata. Il fiume è lungo lungo. Il lago è chiuso tutto intorno. Il mare è aperto e senza fine.')">🔊 ASCOLTA IL CONFRONTO</button>
+  <div class="cmp-head-row">
+    <div class="cmp-spacer"></div>
+    <div class="cmp-th cmp-f">🏞️<br>FIUME</div>
+    <div class="cmp-th cmp-l">🏔️<br>LAGO</div>
+    <div class="cmp-th cmp-m">🌊<br>MARE</div>
+  </div>
+  <div class="cmp-row cmp-row-f" onclick="speakText('L\'acqua del fiume scorre sempre. L\'acqua del lago sta ferma. Il mare fa le onde.')">
+    <div class="cmp-label">💧 L'ACQUA</div>
+    <div class="cmp-cell">SCORRE</div>
+    <div class="cmp-cell">FERMA</div>
+    <div class="cmp-cell">FA ONDE</div>
+  </div>
+  <div class="cmp-row cmp-row-l" onclick="speakText('Il fiume ha acqua dolce. Il lago ha acqua dolce. Il mare ha acqua salata.')">
+    <div class="cmp-label">🍬 CHE SAPORE?</div>
+    <div class="cmp-cell">DOLCE</div>
+    <div class="cmp-cell">DOLCE</div>
+    <div class="cmp-cell">SALATA</div>
+  </div>
+  <div class="cmp-row cmp-row-m" onclick="speakText('Il fiume è lungo lungo. Il lago è chiuso tutto intorno. Il mare è aperto e senza fine.')">
+    <div class="cmp-label">📏 COM'È FATTO?</div>
+    <div class="cmp-cell">LUNGO LUNGO</div>
+    <div class="cmp-cell">CHIUSO INTORNO</div>
+    <div class="cmp-cell">APERTO E SENZA FINE</div>
+  </div>
+  <div class="cmp-row cmp-row-f" onclick="speakText('Nel fiume vivono pesci, rane e anatre. Nel lago vivono pesci e anatre. Nel mare vivono pesci, delfini e tartarughe.')">
+    <div class="cmp-label">🐟 ANIMALI</div>
+    <div class="cmp-cell">PESCI RANE ANATRE</div>
+    <div class="cmp-cell">PESCI ANATRE</div>
+    <div class="cmp-cell">PESCI DELFINI TARTARUGHE</div>
+  </div>
+  <div class="cmp-row cmp-row-l" onclick="speakText('Un fiume famoso in Italia è il Po. I laghi più famosi sono il Lago di Como e il Lago di Garda. I mari più famosi sono il Mar Tirreno e il Mar Adriatico.')">
+    <div class="cmp-label">📍 IN ITALIA</div>
+    <div class="cmp-cell">IL PO</div>
+    <div class="cmp-cell">COMO E GARDA</div>
+    <div class="cmp-cell">TIRRENO ADRIATICO</div>
+  </div>
+  <p style="font-size:12px;font-weight:700;text-transform:uppercase;color:#888;text-align:center;margin-top:8px;">👆 TOCCA UNA RIGA PER ASCOLTARLA</p>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div class="scr" id="scr-quiz">
+  <div id="qz-active">
+    <div class="qz-prog" id="qz-prog"></div>
+    <div class="qz-card">
+      <div class="qz-icon" id="qz-icon"></div>
+      <div class="qz-q" id="qz-q"></div>
+      <button class="qz-audio-btn" onclick="speakCurrentQ()">🔊 RILEGGI LA DOMANDA</button>
+      <div id="qz-opts"></div>
+      <div class="fb" id="qz-fb"></div>
+    </div>
+    <button class="qz-next" id="qz-next" onclick="nextQ()">AVANTI ▶</button>
+  </div>
+  <div id="qz-res" style="display:none;"></div>
+</div>
+
+<!-- ===== ABBINA ===== -->
+<div class="scr" id="scr-abbina">
+  <div class="ab-istr" id="ab-istr">🎯 TOCCA UNA PAROLA A SINISTRA,<br>POI IL SUO SIGNIFICATO A DESTRA!</div>
+  <div class="rnd-lbl" id="ab-rnd"></div>
+  <div class="ab-area">
+    <div class="ab-col">
+      <div class="ab-head">CHI È?</div>
+      <div id="ab-left"></div>
+    </div>
+    <div class="ab-col">
+      <div class="ab-head">COSA VUOL DIRE?</div>
+      <div id="ab-right"></div>
+    </div>
+  </div>
+  <div class="ab-fb" id="ab-fb"></div>
+  <div class="ab-btns" id="ab-btns">
+    <button class="ab-btn" onclick="resetAB()">↺ RICOMINCIA</button>
+    <button class="ab-btn pri" id="ab-next" onclick="nextAB()" style="display:none;">AVANTI ▶</button>
+  </div>
+</div>
+
+<script>
+// ===== AUDIO =====
+var synth = window.speechSynthesis;
+var itVoice = null;
+
+function loadVoice() {
+  var voices = synth.getVoices();
+  itVoice = voices.find(function(v){ return v.lang.startsWith('it'); }) || voices[0] || null;
+}
+loadVoice();
+if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoice;
+
+function speakText(text) {
+  synth.cancel();
+  var utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'it-IT';
+  utt.rate = 0.85;
+  utt.pitch = 1.1;
+  if (itVoice) utt.voice = itVoice;
+  synth.speak(utt);
+}
+
+// ===== STELLE =====
+var stars = 0;
+function addStar(n) {
+  stars += (n||1);
+  document.getElementById('starPill').textContent = '⭐ ' + stars + ' STELLE';
+}
+
+// ===== SCHEDE =====
+var cards = [
+  {
+    emo:'🏞️', title:'IL FIUME',
+    bg:'#E3F2FD', bc:'#1565C0', tc:'#0C447C', rb:'#BBDEFB',
+    abtnBg:'#1565C0', abtnBc:'#0C447C', abtnTc:'#fff',
+    prevBg:'#E3F2FD', prevBc:'#1565C0', prevTc:'#0C447C',
+    nextBg:'#1565C0', nextBc:'#1565C0', nextTc:'#fff',
+    fullText: 'Il fiume. Come si muove? L\'acqua scorre sempre. Che sapore ha? Acqua dolce. Com\'è fatto? Lungo lungo. Gli animali: pesci, rane e anatre. In Italia c\'è il fiume Po, al nord.',
+    rows:[
+      {i:'💧', l:"COME SI MUOVE?", v:"L'ACQUA SCORRE SEMPRE", speak:"L'acqua del fiume scorre sempre."},
+      {i:'🍬', l:"CHE SAPORE HA?", v:"ACQUA DOLCE", speak:"L'acqua del fiume è dolce."},
+      {i:'📏', l:"COM'È FATTO?", v:"LUNGO LUNGO", speak:"Il fiume è lungo lungo."},
+      {i:'🐸', l:"GLI ANIMALI", v:"PESCI, RANE, ANATRE", speak:"Nel fiume vivono i pesci, le rane e le anatre."},
+      {i:'📍', l:"IN ITALIA", v:"IL FIUME PO (NORD)", speak:"Un fiume famoso in Italia è il Po, al nord."},
+    ]
+  },
+  {
+    emo:'🏔️', title:'IL LAGO',
+    bg:'#E8F5E9', bc:'#2E7D32', tc:'#1B5E20', rb:'#C8E6C9',
+    abtnBg:'#2E7D32', abtnBc:'#1B5E20', abtnTc:'#fff',
+    prevBg:'#E8F5E9', prevBc:'#2E7D32', prevTc:'#1B5E20',
+    nextBg:'#2E7D32', nextBc:'#2E7D32', nextTc:'#fff',
+    fullText: 'Il lago. Come si muove? L\'acqua sta ferma. Che sapore ha? Acqua dolce. Com\'è fatto? Chiuso tutto intorno. Gli animali: pesci e anatre. In Italia ci sono il Lago di Como e il Lago di Garda.',
+    rows:[
+      {i:'💧', l:"COME SI MUOVE?", v:"L'ACQUA STA FERMA", speak:"L'acqua del lago sta ferma."},
+      {i:'🍬', l:"CHE SAPORE HA?", v:"ACQUA DOLCE", speak:"L'acqua del lago è dolce."},
+      {i:'📏', l:"COM'È FATTO?", v:"CHIUSO TUTTO INTORNO", speak:"Il lago è chiuso tutto intorno."},
+      {i:'🐟', l:"GLI ANIMALI", v:"PESCI, ANATRE", speak:"Nel lago vivono i pesci e le anatre."},
+      {i:'📍', l:"IN ITALIA", v:"LAGO DI COMO E GARDA", speak:"I laghi più famosi in Italia sono il Lago di Como e il Lago di Garda."},
+    ]
+  },
+  {
+    emo:'🌊', title:'IL MARE',
+    bg:'#FFF3E0', bc:'#E65100', tc:'#BF360C', rb:'#FFE0B2',
+    abtnBg:'#E65100', abtnBc:'#BF360C', abtnTc:'#fff',
+    prevBg:'#FFF3E0', prevBc:'#E65100', prevTc:'#BF360C',
+    nextBg:'#E65100', nextBc:'#E65100', nextTc:'#fff',
+    fullText: 'Il mare. Come si muove? Fa le onde. Che sapore ha? Acqua salata. Com\'è fatto? Aperto e senza fine. Gli animali: pesci, delfini e tartarughe. In Italia ci sono il Mar Tirreno e il Mar Adriatico.',
+    rows:[
+      {i:'💧', l:"COME SI MUOVE?", v:"FA LE ONDE", speak:"Il mare fa le onde."},
+      {i:'🧂', l:"CHE SAPORE HA?", v:"ACQUA SALATA", speak:"L'acqua del mare è salata."},
+      {i:'📏', l:"COM'È FATTO?", v:"APERTO E SENZA FINE", speak:"Il mare è aperto e senza fine."},
+      {i:'🐬', l:"GLI ANIMALI", v:"PESCI, DELFINI, TARTARUGHE", speak:"Nel mare vivono i pesci, i delfini e le tartarughe."},
+      {i:'📍', l:"IN ITALIA", v:"MAR TIRRENO E ADRIATICO", speak:"I mari più famosi in Italia sono il Mar Tirreno e il Mar Adriatico."},
+    ]
+  }
+];
+var ci = 0;
+
+function renderCard() {
+  var c = cards[ci];
+  var card = document.getElementById('sc-card');
+  card.style.background = c.bg; card.style.borderColor = c.bc;
+  document.getElementById('sc-emo').textContent = c.emo;
+  var t = document.getElementById('sc-title');
+  t.textContent = c.title; t.style.color = c.tc;
+  var ab = document.getElementById('sc-audio-btn');
+  ab.style.background = c.abtnBg; ab.style.borderColor = c.abtnBc; ab.style.color = c.abtnTc;
+  var rows = document.getElementById('sc-rows');
+  rows.innerHTML = c.rows.map(function(r,i){
+    return '<div class="info-row" style="background:'+c.rb+';cursor:pointer;" onclick="speakText(\''+r.speak.replace(/'/g,"\\'")+'\')">'
+      +'<span class="info-icon">'+r.i+'</span>'
+      +'<div>'
+      +'<div class="info-label" style="color:'+c.tc+'">'+r.l+'</div>'
+      +'<div class="info-val" style="color:'+c.tc+'">'+r.v+'</div>'
+      +'<div class="speak-hint" style="color:'+c.tc+'">🔊 TOCCA PER ASCOLTARE</div>'
+      +'</div></div>';
+  }).join('');
+  var dots = document.getElementById('sc-dots');
+  dots.innerHTML = cards.map(function(_,i){ return '<div class="dot'+(i===ci?' on':'')+'"></div>'; }).join('');
+  var prev = document.getElementById('sc-prev');
+  prev.style.background = c.prevBg; prev.style.borderColor = c.prevBc; prev.style.color = c.prevTc;
+  var next = document.getElementById('sc-next');
+  next.style.background = c.nextBg; next.style.borderColor = c.nextBc; next.style.color = c.nextTc;
+}
+
+function speakCard() { speakText(cards[ci].fullText); }
+function nextC(){ ci=(ci+1)%cards.length; renderCard(); }
+function prevC(){ ci=(ci-1+cards.length)%cards.length; renderCard(); }
+renderCard();
+
+// ===== QUIZ =====
+var qs = [
+  {i:'💧',q:"L'ACQUA DEL FIUME COM'È?",opts:['DOLCE','SALATA','CALDA'],c:0,ok:'BRAVA! IL FIUME HA ACQUA DOLCE!',no:'NO... IL FIUME HA ACQUA DOLCE.'},
+  {i:'🌊',q:"L'ACQUA DEL MARE COM'È?",opts:['DOLCE','GELATA','SALATA'],c:2,ok:'BRAVISSIMA! IL MARE È SALATO!',no:'NO... IL MARE HA ACQUA SALATA.'},
+  {i:'🏞️',q:'IL FIUME È...',opts:['LUNGO LUNGO','CHIUSO INTORNO','SENZA FINE'],c:0,ok:'ESATTO! IL FIUME È LUNGO LUNGO!',no:'NO... IL FIUME È LUNGO LUNGO.'},
+  {i:'🏔️',q:'IL LAGO È...',opts:['LUNGO LUNGO','CHIUSO TUTTO INTORNO','APERTO'],c:1,ok:'SÌ! IL LAGO È CHIUSO TUTTO INTORNO!',no:'NO... IL LAGO È CHIUSO TUTTO INTORNO.'},
+  {i:'💧',q:"NEL FIUME L'ACQUA...",opts:['STA FERMA','FA LE ONDE','SCORRE SEMPRE'],c:2,ok:'PERFETTO! IL FIUME SCORRE SEMPRE!',no:"NO... NEL FIUME L'ACQUA SCORRE SEMPRE."},
+  {i:'🏔️',q:"NEL LAGO L'ACQUA...",opts:['SCORRE VERSO IL MARE','STA FERMA','È SALATA'],c:1,ok:"SÌ! NEL LAGO L'ACQUA STA FERMA!",no:"NO... NEL LAGO L'ACQUA STA FERMA."},
+  {i:'🐬',q:'I DELFINI VIVONO NEL...',opts:['FIUME','LAGO','MARE'],c:2,ok:'SÌ! I DELFINI VIVONO NEL MARE!',no:'NO... I DELFINI VIVONO NEL MARE.'},
+  {i:'🐸',q:'LE RANE VIVONO NEL...',opts:['MARE','FIUME','DESERTO'],c:1,ok:'BRAVA! LE RANE VIVONO NEL FIUME!',no:'NO... LE RANE VIVONO NEL FIUME.'},
+  {i:'📍',q:'IL PO È UN...',opts:['LAGO','MARE','FIUME'],c:2,ok:'ESATTO! IL PO È UN FIUME!',no:'NO... IL PO È UN FIUME.'},
+  {i:'🌊',q:'QUAL È IL PIÙ GRANDE DI TUTTI?',opts:['IL FIUME','IL LAGO','IL MARE'],c:2,ok:'SÌ! IL MARE È GRANDISSIMO!',no:'NO... IL PIÙ GRANDE È IL MARE.'},
+];
+var qi=0, qans=false, qcorr=0;
+
+function initQuiz(){ qi=0; qans=false; qcorr=0; document.getElementById('qz-active').style.display='block'; document.getElementById('qz-res').style.display='none'; renderQ(); }
+
+function renderQ(){
+  qans=false;
+  var q=qs[qi];
+  var p=document.getElementById('qz-prog');
+  p.innerHTML=qs.map(function(_,i){ return '<div class="qz-dot'+(i<qi?' done':i===qi?' cur':'')+'"></div>'; }).join('');
+  document.getElementById('qz-icon').textContent=q.i;
+  document.getElementById('qz-q').textContent=q.q;
+  var o=document.getElementById('qz-opts');
+  o.innerHTML=q.opts.map(function(op,i){ return '<button class="opt" onclick="ansQ('+i+')">'+op+'</button>'; }).join('');
+  document.getElementById('qz-fb').className='fb';
+  document.getElementById('qz-next').className='qz-next';
+  setTimeout(function(){ speakText(q.q); }, 300);
+}
+
+function speakCurrentQ(){ speakText(qs[qi].q); }
+
+function ansQ(i){
+  if(qans)return; qans=true;
+  var q=qs[qi];
+  document.querySelectorAll('.opt').forEach(function(b){ b.classList.add('off'); });
+  var fb=document.getElementById('qz-fb');
+  if(i===q.c){
+    document.querySelectorAll('.opt')[i].classList.add('ok');
+    fb.textContent='⭐ '+q.ok; fb.className='fb show ok';
+    speakText(q.ok); qcorr++; addStar();
+  } else {
+    document.querySelectorAll('.opt')[i].classList.add('no');
+    document.querySelectorAll('.opt')[q.c].classList.add('ok');
+    fb.textContent='❌ '+q.no; fb.className='fb show no';
+    speakText(q.no);
+  }
+  var nb=document.getElementById('qz-next');
+  nb.textContent=qi<qs.length-1?'AVANTI ▶':'VEDI IL RISULTATO ▶';
+  nb.className='qz-next show';
+}
+
+function nextQ(){ qi++; if(qi>=qs.length){ showQRes(); } else { renderQ(); } }
+
+function showQRes(){
+  document.getElementById('qz-active').style.display='none';
+  var r=document.getElementById('qz-res'); r.style.display='block';
+  var e,ti,su;
+  if(qcorr>=9){ e='🌟🌟🌟'; ti='BRAVISSIMA GAIA!'; su='HAI IMPARATO TUTTO! SEI FORTISSIMA!'; }
+  else if(qcorr>=7){ e='⭐⭐'; ti='MOLTO BRAVA!'; su='QUASI TUTTO GIUSTO! RIPROVA ANCORA!'; }
+  else { e='💪'; ti='CE LA FAI!'; su='RILEGGI LE SCHEDE E RIPROVA. FORZA GAIA!'; }
+  r.innerHTML='<div class="res-box"><div class="res-emo">'+e+'</div><div class="res-t">'+ti+'</div><div class="res-sc">'+qcorr+' / '+qs.length+'</div><div class="res-s">'+su+'</div><button class="restart-btn" onclick="initQuiz()">↺ RIPROVA!</button></div>';
+  speakText(ti + '. ' + qcorr + ' risposte giuste su ' + qs.length + '. ' + su);
+}
+
+// ===== ABBINA =====
+var abRounds=[
+  {lbl:"GIRO 1 DI 3 — L'ACQUA", pairs:[{l:'🏞️ FIUME',r:"ACQUA DOLCE E SCORRE"},{l:'🏔️ LAGO',r:'ACQUA DOLCE E FERMA'},{l:'🌊 MARE',r:'ACQUA SALATA'}]},
+  {lbl:"GIRO 2 DI 3 — COM'È FATTO?", pairs:[{l:'🏞️ FIUME',r:'LUNGO LUNGO'},{l:'🏔️ LAGO',r:'CHIUSO TUTTO INTORNO'},{l:'🌊 MARE',r:'APERTO E SENZA FINE'}]},
+  {lbl:'GIRO 3 DI 3 — GLI ANIMALI', pairs:[{l:'RANE E ANATRE',r:'🏞️ FIUME'},{l:'PESCI DI ACQUA DOLCE',r:'🏔️ LAGO'},{l:'DELFINI E TARTARUGHE',r:'🌊 MARE'}]},
+];
+var abRound=0, abSelL=null, abSelR=null, abMatched=0, abLO=[], abRO=[];
+
+function shuffle(a){ var b=a.slice(); for(var i=b.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=b[i]; b[i]=b[j]; b[j]=t; } return b; }
+
+function initAB(){
+  abSelL=null; abSelR=null; abMatched=0;
+  var rnd=abRounds[abRound];
+  document.getElementById('ab-rnd').textContent=rnd.lbl;
+  document.getElementById('ab-fb').className='ab-fb';
+  document.getElementById('ab-next').style.display='none';
+  abLO=shuffle(rnd.pairs.map(function(p,i){ return {t:p.l, idx:i}; }));
+  abRO=shuffle(rnd.pairs.map(function(p,i){ return {t:p.r, idx:i}; }));
+  renderAB();
+  speakText(rnd.lbl.replace('GIRO','Giro').toLowerCase());
+}
+
+function renderAB(){
+  document.getElementById('ab-left').innerHTML=abLO.map(function(p,i){ return '<div class="tile" id="AL'+i+'" data-idx="'+p.idx+'" onclick="selL('+i+'),speakText(\''+p.t.replace(/'/g,"\\'")+'\')">'+p.t+'</div>'; }).join('');
+  document.getElementById('ab-right').innerHTML=abRO.map(function(p,i){ return '<div class="tile" id="AR'+i+'" data-idx="'+p.idx+'" onclick="selR('+i+'),speakText(\''+p.t.replace(/'/g,"\\'")+'\')">'+p.t+'</div>'; }).join('');
+}
+
+function selL(i){
+  var t=document.getElementById('AL'+i);
+  if(t.classList.contains('ok')||t.classList.contains('off'))return;
+  document.querySelectorAll('[id^="AL"]').forEach(function(x){ if(!x.classList.contains('ok')) x.classList.remove('sel'); });
+  t.classList.add('sel'); abSelL=i; tryAB();
+}
+function selR(i){
+  var t=document.getElementById('AR'+i);
+  if(t.classList.contains('ok')||t.classList.contains('off'))return;
+  document.querySelectorAll('[id^="AR"]').forEach(function(x){ if(!x.classList.contains('ok')) x.classList.remove('sel'); });
+  t.classList.add('sel'); abSelR=i; tryAB();
+}
+function tryAB(){
+  if(abSelL===null||abSelR===null)return;
+  var lt=document.getElementById('AL'+abSelL), rt=document.getElementById('AR'+abSelR);
+  var li=parseInt(lt.dataset.idx), ri=parseInt(rt.dataset.idx);
+  var fb=document.getElementById('ab-fb');
+  if(li===ri){
+    lt.classList.remove('sel'); lt.classList.add('ok');
+    rt.classList.remove('sel'); rt.classList.add('ok');
+    fb.textContent='⭐ GIUSTO! BRAVA GAIA!'; fb.className='ab-fb show ok';
+    speakText('Giusto! Brava Gaia!'); addStar(); abMatched++;
+    if(abMatched===abRounds[abRound].pairs.length){
+      setTimeout(function(){
+        if(abRound<abRounds.length-1){
+          fb.textContent='🌟 PERFETTO! VAI AL PROSSIMO GIRO!'; fb.className='ab-fb show ok';
+          speakText('Perfetto! Vai al prossimo giro!');
+          document.getElementById('ab-next').style.display='block';
+        } else { showABFinal(); }
+      },600);
+    }
+  } else {
+    lt.classList.remove('sel'); lt.classList.add('no');
+    rt.classList.remove('sel'); rt.classList.add('no');
+    fb.textContent='❌ NO, RIPROVA!'; fb.className='ab-fb show no';
+    speakText('No, riprova!');
+    setTimeout(function(){ lt.classList.remove('no'); rt.classList.remove('no'); fb.className='ab-fb'; },900);
+  }
+  abSelL=null; abSelR=null;
+}
+
+function resetAB(){ initAB(); }
+function nextAB(){ abRound++; initAB(); }
+
+function showABFinal(){
+  document.querySelector('.ab-area').style.display='none';
+  document.getElementById('ab-istr').style.display='none';
+  document.getElementById('ab-rnd').textContent='';
+  document.getElementById('ab-fb').className='ab-fb';
+  document.getElementById('ab-btns').innerHTML='<div class="res-box" style="width:100%;"><div class="res-emo">🌟🌟🌟</div><div class="res-t">BRAVISSIMA GAIA!</div><div class="res-sc">'+stars+' STELLE!</div><div class="res-s">HAI ABBINATO TUTTO CORRETTAMENTE!</div><button class="restart-btn" onclick="fullRestartAB()">↺ RICOMINCIA</button></div>';
+  speakText('Bravissima Gaia! Hai abbinato tutto correttamente!');
+}
+
+function fullRestartAB(){
+  abRound=0;
+  document.querySelector('.ab-area').style.display='flex';
+  document.getElementById('ab-istr').style.display='block';
+  document.getElementById('ab-btns').innerHTML='<button class="ab-btn" onclick="resetAB()">↺ RICOMINCIA</button><button class="ab-btn pri" id="ab-next" onclick="nextAB()" style="display:none;">AVANTI ▶</button>';
+  initAB();
+}
+
+initAB();
+
+// ===== NAV =====
+function goTo(name, btn){
+  document.querySelectorAll('.scr').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('scr-'+name).classList.add('active');
+  btn.classList.add('active');
+  synth.cancel();
+  if(name==='quiz') initQuiz();
+  if(name==='abbina'){ abRound=0; initAB(); }
+}
+</script>
+</body>
+</html>
